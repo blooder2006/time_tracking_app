@@ -1,9 +1,37 @@
 import React from "react";
 import "semantic-ui-css/semantic.min.css";
-import { Container, Header } from "semantic-ui-react";
+import { Button, Card } from "semantic-ui-react";
 
 export default class Timer extends React.Component {
   render() {
-    return <React.Fragment />;
+    const elapsedString = this.props.elapsed;
+    return (
+      <React.Fragment>
+        <Card>
+          <Card.Content>
+            <Card.Header>{this.props.title}</Card.Header>
+            <Card.Meta>{this.props.project}</Card.Meta>
+            <Card.Description>
+              <h2>{elapsedString}</h2>
+            </Card.Description>
+            <Button.Group basic size="small">
+              <Button icon="edit" />
+              <Button icon="trash" />
+            </Button.Group>
+          </Card.Content>
+          <Card.Content extra>
+            {this.props.runningSince ? (
+              <Button basic color="red">
+                Stop
+              </Button>
+            ) : (
+              <Button basic color="green">
+                Start
+              </Button>
+            )}
+          </Card.Content>
+        </Card>
+      </React.Fragment>
+    );
   }
 }

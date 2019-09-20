@@ -1,17 +1,22 @@
 import React from "react";
 import "semantic-ui-css/semantic.min.css";
-import { Container, Header } from "semantic-ui-react";
 import TimerForm from "./TimerForm";
 import Timer from "./Timer";
 
 export default class EditableTimer extends React.Component {
+  state = { editFormOpen: false };
   render() {
     return (
       <React.Fragment>
-        {this.props.editFormOpen ? (
-          <TimerForm title={this.props.title} project={this.props.project} />
+        {this.state.editFormOpen ? (
+          <TimerForm
+            id={this.props.id}
+            title={this.props.title}
+            project={this.props.project}
+          />
         ) : (
           <Timer
+            id={this.props.id}
             title={this.props.title}
             project={this.props.project}
             elapsed={this.props.elapsed}
