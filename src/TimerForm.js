@@ -1,7 +1,6 @@
 import React from "react";
 import "semantic-ui-css/semantic.min.css";
 import { Button, Card, Input } from "semantic-ui-react";
-import uuid from "uuid";
 
 export default class TimerForm extends React.Component {
   state = { title: this.props.title || "", project: this.props.project || "" };
@@ -9,11 +8,9 @@ export default class TimerForm extends React.Component {
   handleClose = () => this.props.onFormClose();
   handleSubmit = () => {
     this.props.onFormSubmit({
-      id: uuid.v4(),
+      id: this.props.id,
       title: this.state.title,
-      project: this.state.project,
-      elapsed: 0,
-      runningSince: Date.now()
+      project: this.state.project
     });
   };
 
