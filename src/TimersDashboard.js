@@ -7,26 +7,33 @@ import uuid from "uuid";
 
 export default class TimersDashboard extends React.Component {
   state = {
-    timers: [
-      {
-        id: uuid.v4(),
-        title: "title1",
-        project: "project1",
-        elapsed: 0,
-        runningSince: 0
-      },
-      {
-        id: uuid.v4(),
-        title: "title2",
-        project: "project2",
-        elapsed: 0,
-        runningSince: 0
-      }
-    ]
+    timers: []
   };
 
+  componentDidMount() {
+    /* fetch("/data.json")
+      .then(response => response.json())
+      .then(result => {
+        console.log(result);
+        this.setState(result);
+      });*/
+
+    /*const fff = async () => {
+      let response = await fetch("/data.json");
+      let result = await response.json();
+      return result;
+    };
+    fff().then(result => this.setState(result));*/
+
+    (async () => {
+      let response = await fetch("http://localhost:3005/get");
+      let result = await response.json();
+      this.setState(result);
+    })();
+  }
+
   handleEditFormSubmit = attrs => {
-    this.setState({
+    const newTimers = {
       timers: this.state.timers.map(timer => {
         if (timer.id === attrs.id) {
           return { ...timer, title: attrs.title, project: attrs.project };
@@ -34,7 +41,10 @@ export default class TimersDashboard extends React.Component {
           return timer;
         }
       })
-    });
+    };
+
+    this.setState(newTimers);
+    this.serverUpdateTimer(newTimers);
   };
 
   handleCreateFormSubmit = timer => {
@@ -45,17 +55,21 @@ export default class TimersDashboard extends React.Component {
       id: uuid.v4()
     };
 
-    this.setState({ timers: [...this.state.timers, newTimer] });
+    const newTimers = { timers: [...this.state.timers, newTimer] };
+    this.setState(newTimers);
+    this.serverUpdateTimer(newTimers);
   };
 
   handleTrashClick = timerId => {
-    this.setState({
+    const newTimers = {
       timers: this.state.timers.filter(t => t.id !== timerId)
-    });
+    };
+    this.setState(newTimers);
+    this.serverUpdateTimer(newTimers);
   };
 
   handleStopClick = timerId => {
-    this.setState({
+    const newTimers = {
       timers: this.state.timers.map(timer => {
         if (timer.id === timerId) {
           return {
@@ -67,11 +81,14 @@ export default class TimersDashboard extends React.Component {
           return timer;
         }
       })
-    });
+    };
+
+    this.setState(newTimers);
+    this.serverUpdateTimer(newTimers);
   };
 
   handleStartClick = timerId => {
-    this.setState({
+    const newTimers = {
       timers: this.state.timers.map(timer => {
         if (timer.id === timerId) {
           return {
@@ -82,7 +99,23 @@ export default class TimersDashboard extends React.Component {
           return timer;
         }
       })
-    });
+    };
+    this.setState(newTimers);
+    this.serverUpdateTimer(newTimers);
+  };
+
+  serverUpdateTimer = data => {
+    (async () => {
+      let response = await fetch("http://localhost:3005/post", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Accept: "application/json"
+        }
+      });
+    })();
   };
 
   render() {
